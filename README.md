@@ -7,7 +7,9 @@ CMRC 2019 Official Website (Chinese only)：[https://cmrc2019.hfl-rc.com/](https
 TBD
 
 ### Introduction
-TBD
+Following CMRC 2017, CMRC 2018, to further accelerate the progress of Chinese Machine Reading Comprehension research, **The Third Evaluation Workshop on Chinese Machine Reading Comprehension (CMRC 2019)** will be co-located with [CCL 2019 (The Eighteenth China National Conference on Computational Linguistics)](http://cips-cl.org/static/CCL2019/index.html) at Kunming from October 18th through October 20th, 2019.
+
+Further information will be announced in the future.
 
 
 ### Task Description
