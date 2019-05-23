@@ -1,38 +1,60 @@
 ## The Third Evaluation Workshop on Chinese Machine Reading Comprehension (CMRC 2019)
-The Third Evaluation Workshop on Chinese Machine Reading Comprehension (CMRC 2019)
 
-CMRC 2019 Official Website：[https://cmrc2019.hfl-rc.com/](https://hfl-rc.github.io/cmrc2019/)
+This is the official repository for CMRC 2019.
 
-### News
-May 17th, 2019	**We are expected to release task introduction and call for participation on late May or early June. Stay tuned!**
+More details:
 
-### Introduction
-Following [CMRC 2017](https://hfl-rc.github.io/cmrc2017/), [CMRC 2018](https://hfl-rc.github.io/cmrc2018/), to further accelerate the progress of Chinese Machine Reading Comprehension research, **The Third Evaluation Workshop on Chinese Machine Reading Comprehension (CMRC 2019)** will be co-located with [CCL 2019 (The Eighteenth China National Conference on Computational Linguistics)](http://cips-cl.org/static/CCL2019/index.html) at Kunming from October 18th through October 20th, 2019.
+- CMRC 2019 Official Website (中文)：[https://cmrc2019.hfl-rc.com/](https://hfl-rc.github.io/cmrc2019/)
 
-Further information will be announced in the future.
+- CMRC 2019 Official Website (English)：[https://cmrc2019.hfl-rc.com/english/](https://hfl-rc.github.io/cmrc2019/english/)
+
+## Updates
+
+May 23th, 2019  **Train/Trial data** have been released, check *data* directory.</br>
+May 17th, 2019	We are expected to release task introduction and call for participation on late May or early June. Stay tuned!
+
+## Directory Guide
+
+- baseline: a Chinese BERT based simple baseline system
+
+- eval: contains official evaluation script
+
+- data: contains offical evaluation data
+
+- sample_submission: sample submission for codalab competition platform
+
+## Baseline System
+
+We provide a BERT-based baseline system for participants.
+
+Results on other sets will be annouced after competition.
+
+| System | Trial | Dev | Qualifying | Test | 
+| :------ | :-----: | :-----: | :-----: | :-----: | 
+| BERT-base (Chinese) | - | - | - | - |
+
+## Data
+
+| Data | Document # | Query # | Note |
+| :------ | :-----: | :-----: | :----- | 
+| Trial Data | - | - | Public |
+| Train Data | - | - | Public |
+| Development Data | - | - | Public |
+| Qualifying Data | - | - | Semi-Hidden set |
+| Test Data | - | - | Hidden set |
 
 
-### Task Description
-TBD
+## Organization Committee
+Host: Chinese Information Processing Society of China (CIPS) </br>
+Organizer: Joint Laboratory of HIT and iFLYTEK (HFL) </br>
+Sponsor: iFLYTEK Co., Ltd. </br>
 
-
-### Prizes
-TBD
-
-
-### Important Dates
-TBD
-
-
-### Registration 
-TBD
-
-
-### Organization
-TBD
-
+## Evaluation Co-Chairs
+Ting Liu, Harbin Institute of Technology </br>
+Yiming Cui, iFLYTEK Research
 
 ## Contact us
-Any problems? Feel free to concat us.
+Any problems? Feel free to concat us. </br>
+Email: **[cmrc2019 [aT] 126 [DoT] com](mailto:cmrc2019@126.com)** </br>
+Forum: [CodaLab Competition Forum](https://competitions.codalab.org/forums/19781/)
 
-E-MAIL： **[cmrc2019@126.com](mailto:cmrc2019@126.com)**
