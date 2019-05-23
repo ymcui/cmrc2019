@@ -23,22 +23,27 @@ May 17th, 2019	We are expected to release task introduction and call for partici
 
 - sample_submission: sample submission for codalab competition platform
 
+
 ## Baseline System
 
-We provide a BERT-based baseline system for participants.
+We provide a BERT-based baseline system for participants (will be available shortly).
 
-Results on other sets will be annouced after competition.
+Results on other sets will be annouced later.
 
-| System | Trial | Dev | Qualifying | Test | 
-| :------ | :-----: | :-----: | :-----: | :-----: | 
-| BERT-base (Chinese) | - | - | - | - |
+| Data | QAC | PAC | 
+| :------ | :-----: | :-----: | 
+| Trial data | 64.627% | 10.791% |
+| Development data | - | - |
+| Qualifying data | - | - |
+| Test data | - | - |
+
 
 ## Data
 
 | Data | Document # | Query # | Note |
 | :------ | :-----: | :-----: | :----- | 
-| Trial Data | - | - | Public |
-| Train Data | - | - | Public |
+| Trial Data | 139 | 1,504 | Public |
+| Train Data | 9,638 | 100,009 | Public |
 | Development Data | - | - | Public |
 | Qualifying Data | - | - | Semi-Hidden set |
 | Test Data | - | - | Hidden set |
