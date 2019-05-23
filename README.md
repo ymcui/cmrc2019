@@ -52,7 +52,7 @@ Results on other sets will be annouced later.
 ## Organization Committee
 Host: Chinese Information Processing Society of China (CIPS) </br>
 Organizer: Joint Laboratory of HIT and iFLYTEK (HFL) </br>
-Sponsor: iFLYTEK Co., Ltd. </br>
+Sponsor: iFLYTEK Co., Ltd. and iFLYTEK Research (Hebei) </br>
 
 ## Evaluation Co-Chairs
 Ting Liu, Harbin Institute of Technology </br>
