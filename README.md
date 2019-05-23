@@ -40,7 +40,7 @@ Results on other sets will be annouced later.
 
 ## Data
 
-| Data | Document # | Query # | Note |
+| Data | Passage # | Query # | Note |
 | :------ | :-----: | :-----: | :----- | 
 | Trial Data | 139 | 1,504 | Public |
 | Train Data | 9,638 | 100,009 | Public |
