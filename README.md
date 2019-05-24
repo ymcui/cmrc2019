@@ -10,12 +10,13 @@ More details:
 
 ## Updates
 
-May 23th, 2019  **Train/Trial data** have been released, check *data* directory.</br>
-May 17th, 2019	We are expected to release task introduction and call for participation on late May or early June. Stay tuned!
+May 24, 2019  **Baseline system** have been released, check *baseline* directory.</br>
+May 23, 2019  **Train/Trial data** have been released, check *data* directory.</br>
+May 17, 2019	We are expected to release task introduction and call for participation on late May or early June. Stay tuned!
 
 ## Directory Guide
 
-- baseline: a Chinese BERT based simple baseline system
+- baseline: a Chinese BERT-based simple baseline system
 
 - eval: contains official evaluation script
 
