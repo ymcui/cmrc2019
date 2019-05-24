@@ -1,7 +1,14 @@
 ## Baseline System for CMRC 2019
 
 We provide a simple BERT-based baseline system (PyTorch version) for participants. </br>
-We assume that you have been familiar with [PyTorch BERT](https://github.com/huggingface/pytorch-pretrained-BERT).
+
+### Note
+
+- We assume that you have been familiar with [PyTorch BERT](https://github.com/huggingface/pytorch-pretrained-BERT). </br>
+
+- We are NOT responsible for helping participants in building up their baseline systems.
+
+- The baseline codes are only for helping participants to better understand the basic routine of this task.
 
 
 ## Content
