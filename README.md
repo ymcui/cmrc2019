@@ -27,7 +27,7 @@ May 17, 2019	We are expected to release task introduction and call for participa
 
 ## Baseline System
 
-We provide a BERT-based baseline system for participants (will be available shortly).
+We provide a BERT-based baseline system for participants (check *baseline* directory for more info).
 
 Results on other sets will be annouced later.
 
