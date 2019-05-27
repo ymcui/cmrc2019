@@ -2,6 +2,11 @@
 
 We provide a simple BERT-based baseline system (PyTorch version) for participants. </br>
 
+### Updates
+May 27, 2019 We've discovered an issue in the baseline code and will be updated shortly. Thank @fanyangfanyang for reporting the issue.
+
+
+
 ### Note
 
 - We assume that you have been familiar with [PyTorch BERT](https://github.com/huggingface/pytorch-pretrained-BERT). </br>
@@ -46,7 +51,7 @@ We assume that all the files are placed in the correct path. </br>
 Pre-trained Chinese BERT weights (PyTorch version) should be placed in `bert_weights_chinese` folder.
 
 ```
-python run_baseline.py \
+python run_cmrc2019_baseline.py \
 	--bert_model bert-base-chinese \
 	--vocab_file ./bert_weights_chinese/vocab.txt \
 	--bert_config_file ./bert_weights_chinese/bert_config.json \
@@ -68,7 +73,7 @@ We use one NVIDIA V100 (32GB) for training and roughly take 4~5 hours.
 ## Testing
 If you have successfully trained your model, you could use the following command for testing your model on the testing sets.
 ```
-python run_baseline.py \
+python run_cmrc2019_baseline.py \
 	--bert_model bert-base-chinese \
 	--vocab_file ./bert_weights_chinese/vocab.txt \
 	--bert_config_file ./bert_weights_chinese/bert_config.json \
