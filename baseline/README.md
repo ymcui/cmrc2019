@@ -3,7 +3,7 @@
 We provide a simple BERT-based baseline system (PyTorch version) for participants. </br>
 
 ### Updates
-May 27, 2019 We've discovered an issue in the baseline code and will be updated shortly. Thank @fanyangfanyang for reporting the issue.
+May 27, 2019 We've discovered an issue in the baseline code and will be updated shortly. Thank **@fanyangfanyang** for reporting the issue.
 
 
 
