@@ -1,5 +1,5 @@
 # coding=utf-8
-# Copyright 2018 The Google AI Language Team Authors , The HugginFace Inc and HFL-RC Team. team.
+# Copyright 2018 The Google AI Language Team Authors and The HugginFace Inc. team.
 # Copyright (c) 2018, NVIDIA CORPORATION.  All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +13,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Run BERT on CMRC2019."""
+"""Run BERT on SQuAD."""
 
+# from __future__ import absolute_import
+# from __future__ import division
 from __future__ import print_function
 
 import argparse
@@ -26,7 +28,7 @@ import os
 import random
 import pickle
 from tqdm import tqdm, trange
-import pickle as cPickle
+
 import numpy as np
 import torch
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler, SequentialSampler
@@ -50,36 +52,29 @@ class BertForQuestionAnswering(PreTrainedBertModel):
     def __init__(self, config):
         super(BertForQuestionAnswering, self).__init__(config)
         self.bert = BertModel(config)
-        # TODO check with Google if it's normal there is no dropout on the token classifier of SQuAD in the TF version
-        self.qa_outputs = nn.Linear(config.hidden_size, 2)
+        self.qa_outputs = nn.Linear(config.hidden_size, 1)
         self.apply(self.init_bert_weights)
 
-    def forward(self, input_ids, token_type_ids=None, attention_mask=None, answer_pos=None,start_positions=None, end_positions=None):
+    def forward(self, input_ids, token_type_ids=None, attention_mask=None, answer_mask=None,positions=None):
         sequence_output, _ = self.bert(input_ids, token_type_ids, attention_mask, output_all_encoded_layers=False)
-        answer_pos=answer_pos.to(dtype=next(self.parameters()).dtype)
-        logits = self.qa_outputs(sequence_output)
-        start_logits, end_logits = logits.split(1, dim=-1)
-        start_logits = start_logits.squeeze(-1)*answer_pos
-        end_logits = end_logits.squeeze(-1)*answer_pos
+        answer_mask = answer_mask.to(dtype=next(self.parameters()).dtype)
+        logits = self.qa_outputs(sequence_output).squeeze(-1)
+        #logits = logits*answer_mask_
+        logits = logits + (1-answer_mask) * -10000.0
 
-        if start_positions is not None and end_positions is not None:
+        if positions is not None:
             # If we are on multi-GPU, split add a dimension
-            if len(start_positions.size()) > 1:
-                start_positions = start_positions.squeeze(-1)
-            if len(end_positions.size()) > 1:
-                end_positions = end_positions.squeeze(-1)
-            # sometimes the start/end positions are outside our model inputs, we ignore these terms
-            ignored_index = start_logits.size(1)
-            start_positions.clamp_(0, ignored_index)
-            end_positions.clamp_(0, ignored_index)
+            if len(positions.size()) > 1:
+                positions = positions.squeeze(-1)
+            # sometimes the positions are outside our model inputs, we ignore these terms
+            ignored_index = logits.size(1)
+            positions.clamp_(0, ignored_index)
 
             loss_fct = CrossEntropyLoss(ignore_index=ignored_index)
-            start_loss = loss_fct(start_logits, start_positions)
-            end_loss = loss_fct(end_logits, end_positions)
-            total_loss = (start_loss + end_loss) / 2
+            total_loss = loss_fct(logits, positions)
             return total_loss
         else:
-            return start_logits, end_logits
+            return logits
 
 
 class SquadExample(object):
@@ -90,14 +85,12 @@ class SquadExample(object):
                  question_text,
                  doc_tokens,
                  orig_answer_text=None,
-                 start_position=None,
-                 end_position=None):
+                 position=None):
         self.qas_id = qas_id
         self.question_text = question_text
         self.doc_tokens = doc_tokens
         self.orig_answer_text = orig_answer_text
-        self.start_position = start_position
-        self.end_position = end_position
+        self.position = position
 
     def __str__(self):
         return self.__repr__()
@@ -108,17 +101,15 @@ class SquadExample(object):
         s += ", question_text: %s" % (
             self.question_text)
         s += ", doc_tokens: [%s]" % (" ".join(self.doc_tokens))
-        if self.start_position:
-            s += ", start_position: %d" % (self.start_position)
-        if self.start_position:
-            s += ", end_position: %d" % (self.end_position)
+        if self.position:
+            s += ", position: %d" % (self.position)
         return s
 
 
 def read_squad_examples(input_data, is_training):
     """Read a SQuAD json file into a list of SquadExample."""
     # with open(input_file, "r", encoding='utf-8') as reader:
-    replace_list=[#to change [BLANK1] to BERT [unused1] vocab
+    replace_list=[
         ['[BLANK1]','[unused1]'],
        ['[BLANK2]','[unused2]'],
        ['[BLANK3]','[unused3]'],
@@ -142,10 +133,10 @@ def read_squad_examples(input_data, is_training):
         return False
 
     examples = []
-    for context_index,entry in enumerate(input_data['data']):
+    for entry in input_data['data']:
         # for paragraph in entry["paragraphs"]:
-        context_index=entry["context_id"]
         paragraph=entry
+        context_index=entry["context_id"]
         paragraph_text = paragraph["context"]
         for key,value in replace_list:
             paragraph_text=paragraph_text.replace(key,value,1)
@@ -179,8 +170,12 @@ def read_squad_examples(input_data, is_training):
             choices=paragraph["choices"]
             for answer_index,choice_num in enumerate(paragraph["answers"]):
                 answer_text="[unused{}]".format(str((answer_index)+1))
-                question_text = choices[choice_num]
+                # tmp_answer_text=''
+                # for word in answer_text:
+                #     tmp_answer_text+=word+" "
+                # answer_text=tmp_answer_text.strip()
                 orig_answer_text = answer_text
+                question_text = choices[choice_num]
                 answer_offset = paragraph_text.find(orig_answer_text)
                 answer_length = len(orig_answer_text)
                 start_position = char_to_word_offset[answer_offset]
@@ -197,6 +192,9 @@ def read_squad_examples(input_data, is_training):
                 if actual_text.find(cleaned_answer_text) == -1:
                     logger.warning("Could not find answer: '%s' vs. '%s'",
                                        actual_text, cleaned_answer_text)
+                    logger.info("context: {}".format(doc_tokens))
+                    logger.info("context: {}".format(paragraph_text))
+                    logger.info("chooses: {}".format(choices))
                     continue
 
                 example = SquadExample(
@@ -204,8 +202,7 @@ def read_squad_examples(input_data, is_training):
                     question_text=question_text,
                     doc_tokens=doc_tokens,
                     orig_answer_text=orig_answer_text,
-                    start_position=start_position,
-                    end_position=end_position)
+                    position=start_position)
                 examples.append(example)
         else:
 
@@ -213,18 +210,21 @@ def read_squad_examples(input_data, is_training):
             for choice_index,choice in enumerate(paragraph["choices"]):
                 question_text = choice
                 orig_answer_text = None
-                start_position = None
-                end_position = None
+                position = None
+                # Only add answers where the text can be exactly recovered from the
+                # document. If this CAN'T happen it's likely due to weird Unicode
+                # stuff so we will just skip the example.
+                #
                 # Note that this means for training mode, every example is NOT
                 # guaranteed to be preserved.
+
 
                 example = SquadExample(
                     qas_id=str(context_index)+"###"+str(choice_index),
                     question_text=question_text,
                     doc_tokens=doc_tokens,
                     orig_answer_text=answer_index,
-                    start_position=start_position,
-                    end_position=end_position)
+                    position=position)
                 examples.append(example)
     return examples
 
@@ -245,8 +245,7 @@ class InputFeatures(object):
                  input_mask,
                  segment_ids,
                  answer_position_mask,
-                 start_position=None,
-                 end_position=None):
+                 position=None):
         self.unique_id = unique_id
         self.example_index = example_index
         self.doc_span_index = doc_span_index
@@ -257,8 +256,7 @@ class InputFeatures(object):
         self.input_mask = input_mask
         self.segment_ids = segment_ids
         self.answer_position_mask=answer_position_mask
-        self.start_position = start_position
-        self.end_position = end_position
+        self.position = position
 
 
 
@@ -288,17 +286,12 @@ def convert_examples_to_features(examples, tokenizer, max_seq_length,
                 tok_to_orig_index.append(i)
                 all_doc_tokens.append(sub_token)
 
-        tok_start_position = None
-        tok_end_position = None
+        tok_position = None
         if is_training:
-            tok_start_position = orig_to_tok_index[example.start_position]
-            if example.end_position < len(example.doc_tokens) - 1:
-                tok_end_position = orig_to_tok_index[example.end_position + 1] - 1
-            else:
-                tok_end_position = len(all_doc_tokens) - 1
-            (tok_start_position, tok_end_position) = _improve_answer_span(
-                all_doc_tokens, tok_start_position, tok_end_position, tokenizer,
-                example.orig_answer_text)
+            tok_position = orig_to_tok_index[example.position]
+            #tok_position, _ = _improve_answer_span(
+            #    all_doc_tokens, tok_position, tok_position, tokenizer,
+            #    example.orig_answer_text)
 
         # The -3 accounts for [CLS], [SEP] and [SEP]
         max_tokens_for_doc = max_seq_length - len(query_tokens) - 3
@@ -344,10 +337,13 @@ def convert_examples_to_features(examples, tokenizer, max_seq_length,
             tokens.append("[SEP]")
             segment_ids.append(1)
             answer_position_mask=[0]*max_seq_length
-            for word_index in range(len(tokens)): # blank mask to mark the blank position
+            for word_index in range(len(tokens)): # blank mask
                 word=tokens[word_index]
                 if word.find("unused")>-1 :
                     answer_position_mask[word_index]=1
+
+
+
             input_ids = tokenizer.convert_tokens_to_ids(tokens)
 
             # The mask has 1 for real tokens and 0 for padding tokens. Only real
@@ -365,21 +361,17 @@ def convert_examples_to_features(examples, tokenizer, max_seq_length,
             assert len(segment_ids) == max_seq_length
             assert len(answer_position_mask)==max_seq_length
 
-            start_position = None
-            end_position = None
+            position = None
             if is_training:
                 # For training, if our document chunk does not contain an annotation
                 # we throw it out, since there is nothing to predict.
                 doc_start = doc_span.start
                 doc_end = doc_span.start + doc_span.length - 1
-                if (example.start_position < doc_start or
-                        example.end_position < doc_start or
-                        example.start_position > doc_end or example.end_position > doc_end):
+                if (example.position < doc_start or example.position > doc_end):
                     continue
 
                 doc_offset = len(query_tokens) + 2
-                start_position = tok_start_position - doc_start + doc_offset
-                end_position = tok_end_position - doc_start + doc_offset
+                position = tok_position - doc_start + doc_offset
 
             if example_index < 5:
                 logger.info("*** Example ***")
@@ -399,9 +391,8 @@ def convert_examples_to_features(examples, tokenizer, max_seq_length,
                 logger.info(
                     "segment_ids: %s" % " ".join([str(x) for x in segment_ids]))
                 if is_training:
-                    answer_text = " ".join(tokens[start_position:(end_position + 1)])
-                    logger.info("start_position: %d" % (start_position))
-                    logger.info("end_position: %d" % (end_position))
+                    answer_text = " ".join(tokens[position:(position + 1)])
+                    logger.info("position: %d" % (position))
                     logger.info(
                         "answer: %s" % (answer_text))
 
@@ -417,8 +408,7 @@ def convert_examples_to_features(examples, tokenizer, max_seq_length,
                     input_mask=input_mask,
                     segment_ids=segment_ids,
                     answer_position_mask=answer_position_mask,
-                    start_position=start_position,
-                    end_position=end_position))
+                    position=position))
             unique_id += 1
 
     return features
@@ -500,7 +490,7 @@ def _check_is_max_context(doc_spans, cur_span_index, position):
 
 
 RawResult = collections.namedtuple("RawResult",
-                                   ["unique_id", "start_logits", "end_logits"])
+                                   ["unique_id", "logits"])
 
 
 def write_predictions(all_examples, all_features, all_results, n_best_size,
@@ -520,7 +510,7 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
 
     _PrelimPrediction = collections.namedtuple(  # pylint: disable=invalid-name
         "PrelimPrediction",
-        ["feature_index", "start_index", "end_index", "start_logit", "end_logit"])
+        ["feature_index", "index", "logit"])
 
     all_predictions = collections.OrderedDict()
     all_nbest_json = collections.OrderedDict()
@@ -531,43 +521,28 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
         for (feature_index, feature) in enumerate(features):
             result = unique_id_to_result[feature.unique_id]
 
-            start_indexes = _get_best_indexes(result.start_logits, n_best_size)
-            end_indexes = _get_best_indexes(result.end_logits, n_best_size)
-            for start_index in start_indexes:
-                for end_index in end_indexes:
-                    # We could hypothetically create invalid predictions, e.g., predict
-                    # that the start of the span is in the question. We throw out all
-                    # invalid predictions.
-                    if start_index >= len(feature.tokens):
+            indexes = _get_best_indexes(result.logits, n_best_size)
+            for index in indexes:
+                    if index >= len(feature.tokens):
                         continue
-                    if end_index >= len(feature.tokens):
+                    if index not in feature.token_to_orig_map:
                         continue
-                    if start_index not in feature.token_to_orig_map:
+                    if not feature.token_is_max_context.get(index, False):
                         continue
-                    if end_index not in feature.token_to_orig_map:
-                        continue
-                    if not feature.token_is_max_context.get(start_index, False):
-                        continue
-                    if end_index < start_index:
-                        continue
-                    length = end_index - start_index + 1
-                    if length > max_answer_length:
-                        continue
+                    length = 1
                     prelim_predictions.append(
                         _PrelimPrediction(
                             feature_index=feature_index,
-                            start_index=start_index,
-                            end_index=end_index,
-                            start_logit=result.start_logits[start_index],
-                            end_logit=result.end_logits[end_index]))
+                            index=index,
+                            logit=result.logits[index]))
 
         prelim_predictions = sorted(
             prelim_predictions,
-            key=lambda x: (x.start_logit + x.end_logit),
+            key=lambda x: (x.logit),
             reverse=True)
 
         _NbestPrediction = collections.namedtuple(  # pylint: disable=invalid-name
-            "NbestPrediction", ["text", "start_logit", "end_logit"])
+            "NbestPrediction", ["text", "logit"])
 
         seen_predictions = {}
         nbest = []
@@ -576,10 +551,9 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
                 break
             feature = features[pred.feature_index]
 
-            tok_tokens = feature.tokens[pred.start_index:(pred.end_index + 1)]
-            orig_doc_start = feature.token_to_orig_map[pred.start_index]
-            orig_doc_end = feature.token_to_orig_map[pred.end_index]
-            orig_tokens = example.doc_tokens[orig_doc_start:(orig_doc_end + 1)]
+            tok_tokens = feature.tokens[pred.index:(pred.index + 1)]
+            orig_doc = feature.token_to_orig_map[pred.index]
+            orig_tokens = example.doc_tokens[orig_doc:(orig_doc + 1)]
             tok_text = " ".join(tok_tokens)
 
             # De-tokenize WordPieces that have been split off.
@@ -599,20 +573,19 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
             nbest.append(
                 _NbestPrediction(
                     text=final_text,
-                    start_logit=pred.start_logit,
-                    end_logit=pred.end_logit))
+                    logit=pred.logit))
 
         # In very rare edge cases we could have no valid predictions. So we
         # just create a nonce prediction in this case to avoid failure.
         if not nbest:
             nbest.append(
-                _NbestPrediction(text="empty", start_logit=0.0, end_logit=0.0))
+                _NbestPrediction(text="empty", logit=0.0))
 
         assert len(nbest) >= 1
 
         total_scores = []
         for entry in nbest:
-            total_scores.append(entry.start_logit + entry.end_logit)
+            total_scores.append(entry.logit)
 
         probs = _compute_softmax(total_scores)
 
@@ -621,8 +594,7 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
             output = collections.OrderedDict()
             output["text"] = entry.text
             output["probability"] = probs[i]
-            output["start_logit"] = entry.start_logit
-            output["end_logit"] = entry.end_logit
+            output["logit"] = entry.logit
             nbest_json.append(output)
 
         assert len(nbest_json) >= 1
@@ -630,11 +602,17 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
         all_predictions[example.qas_id] = [[tmp["text"] for tmp in nbest_json],[tmp['probability'] for tmp in nbest_json]]
         all_nbest_json[example.qas_id] = nbest_json
 
+    # with open(output_prediction_file, "w") as writer:
+    #     writer.write(json.dumps(all_predictions, indent=4) + "\n")
+    #
+    # with open(output_nbest_file, "w") as writer:
+    #     writer.write(json.dumps(all_nbest_json, indent=4) + "\n")
     all_examples_dict=dict()
     for example in all_examples:
         all_examples_dict[example.qas_id]=example
     right_num=0
     all_num=0
+    all_num1=0
     all_context_dict=dict()
     for key ,value in all_predictions.items():
         context_id,answer_id=key.split("###")
@@ -643,7 +621,7 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
             all_context_dict[context_id].append([example,answer_id,value])
         else:
             all_context_dict[context_id]=[[example,answer_id,value]]
-    output_predict=dict()
+    out_put_predict=dict()
     for key , value in all_context_dict.items():
         final_id=key
         answer_position_num=0
@@ -659,7 +637,7 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
             answer_id_to_predict_val[answer_id]=val
         answer_text_dict=dict()
         while True:# search best answer for every choices
-            is_updata=False
+            is_update=False
             for key ,value in answer_id_to_predict_val.items():
                 if len(value[0])==0:
                     continue
@@ -673,20 +651,21 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
                         tmp_value[1]=tmp_value[1][1:]
                         answer_id_to_predict_val[answer_text_score_id[1]]=tmp_value
                         answer_text_dict[best_answer_text]=[best_answer_score,key]
-                        is_updata=True
+                        is_update=True
                     elif answer_text_score_id[1] != key:
                         tmp_value=answer_id_to_predict_val[key]
                         tmp_value[0]=tmp_value[0][1:]
                         tmp_value[1]=tmp_value[1][1:]
                         answer_id_to_predict_val[key]=tmp_value
-                        is_updata=True
+                        is_update=True
                 else:
                     answer_text_dict[best_answer_text]=[best_answer_score,key]
-                    is_updata=True
-            if is_updata==False:
+                    is_update=True
+            if is_update==False:
                 break
 
-        output_predict[final_id]=[-1]*len(answer_position_to_id)
+        # logger.info("predict: {}".format(answer_id_to_predict_val))
+        out_put_predict[final_id]=[-1]*len(answer_position_to_id)
         for key ,value_1 in answer_id_to_predict_val.items(): #get final predict file
             if len(value_1)>0 and len(value_1[0])>0:
                 answer_pos=value_1[0][0]
@@ -694,24 +673,30 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
                 answer_pos=answer_pos.replace("]","")
                 try:
                     answer_pos=int(answer_pos)
-                    output_predict[final_id][answer_pos-1]=int(key)
+                    out_put_predict[final_id][answer_pos-1]=int(key)
                 except Exception as e:
                     continue
 
         for pos,id in enumerate(answer_position_to_id): # evaluate result
             answer_raw_text="[unused{}]".format(str((pos)+1))
-            all_num+=1
+            # tmp_raw_answer=""
+            # for word in answer_raw_text:
+            #     tmp_raw_answer+=word+" "
+            # answer_raw_text=tmp_raw_answer.strip()
+            all_num1+=1
             if str(id) not in answer_id_to_predict_val:
                 continue
+
             value_=answer_id_to_predict_val[str(id)]
             if len(value_)>0 and len(value_[0])>0:
                 logger.info("answer {}, predict {}".format(answer_raw_text,value_[0][0]))
 
             if len(value_)>0 and len(value_[0])>0 and answer_raw_text==value_[0][0]:
                 right_num+=1
-    logger.info("acc em {}, right {} all blank num {}".format(right_num*1.0/all_num,right_num,all_num))
-    json.dump(output_predict,open(output_prediction_file,mode="w"),indent=3)
-    json.dump(all_nbest_json,open(output_nbest_file,mode='w'),indent=4)
+    logger.info("acc em {}, right {} all example {}".format(right_num*1.0/len(all_examples),right_num,len(all_examples)))
+    #logger.info("acc em1 {}, right {} all num {}".format(right_num*1.0/all_num,right_num,all_num))
+    #logger.info("acc em2 {}, right {} all num1 {}".format(right_num*1.0/all_num1,right_num,all_num1))
+    json.dump(out_put_predict,open(output_prediction_file,mode="w"),indent=3)
 
 
 
@@ -863,9 +848,6 @@ def main():
                         help="Initial checkpoint (usually from a pre-trained BERT model).")
 
     ## Required parameters
-    parser.add_argument("--bert_model", default=None, type=str, required=True,
-                        help="Bert pre-trained model selected in the list: bert-base-uncased, "
-                             "bert-large-uncased, bert-base-cased, bert-base-multilingual, bert-base-chinese.")
     parser.add_argument("--output_dir", default=None, type=str, required=True,
                         help="The output directory where the model checkpoints and predictions will be written.")
 
@@ -969,18 +951,21 @@ def main():
                 "If `do_predict` is True, then `predict_file` must be specified.")
 
     if os.path.exists(args.output_dir)==False:
+        # raise ValueError("Output directory () already exists and is not empty.")
         os.makedirs(args.output_dir, exist_ok=True)
+    raw_test_data=json.load(open(args.predict_file,mode='r'))
+    raw_train_data=json.load(open(args.train_file,mode='r'))
 
-
+    import pickle as cPickle
     train_examples = None
     num_train_steps = None
     if args.do_train:
-        raw_train_data=json.load(open(args.train_file,mode='r'))
-        if os.path.exists("train_baseline.pkl") and False:
-            train_examples=cPickle.load(open("train_baseline.pkl",mode='rb'))
+
+        if os.path.exists("train_file_baseline.pkl") and False:
+            train_examples=cPickle.load(open("train_file_baseline.pkl",mode='rb'))
         else:
             train_examples = read_squad_examples(raw_train_data, is_training = True)
-            cPickle.dump(train_examples,open("train_baseline.pkl",mode='wb'))
+            cPickle.dump(train_examples,open("train_file_baseline.pkl",mode='wb'))
         logger.info("train examples {}".format(len(train_examples)))
         num_train_steps = int(
             len(train_examples) / args.train_batch_size / args.gradient_accumulation_steps * args.num_train_epochs)
@@ -989,7 +974,6 @@ def main():
     bert_config = BertConfig.from_json_file(args.bert_config_file)
     tokenizer = BertTokenizer(vocab_file=args.vocab_file, do_lower_case=args.do_lower_case)
     model =BertForQuestionAnswering(bert_config)
-
     if args.init_checkpoint is not None:
         logger.info('load bert weight')
         state_dict=torch.load(args.init_checkpoint, map_location='cpu')
@@ -999,6 +983,10 @@ def main():
         # copy state_dict so _load_from_state_dict can modify it
         metadata = getattr(state_dict, '_metadata', None)
         state_dict = state_dict.copy()
+        # new_state_dict=state_dict.copy()
+        # for kye ,value in state_dict.items():
+        #     new_state_dict[kye.replace("bert","c_bert")]=value
+        # state_dict=new_state_dict
         if metadata is not None:
             state_dict._metadata = metadata
         def load(module, prefix=''):
@@ -1066,7 +1054,7 @@ def main():
 
     global_step = 0
     if args.do_train:
-        cached_train_features_file = args.train_file+'_{0}_{1}_{2}_{3}_v{4}'.format(args.bert_model, str(args.max_seq_length), str(args.doc_stride), str(args.max_query_length),str(1))
+        cached_train_features_file = args.train_file+'_{0}_{1}_{2}_v{3}'.format(str(args.max_seq_length), str(args.doc_stride), str(args.max_query_length),str(1))
         train_features = None
         try:
             with open(cached_train_features_file, "rb") as reader:
@@ -1093,34 +1081,28 @@ def main():
         all_input_mask = torch.tensor([f.input_mask for f in train_features], dtype=torch.long)
         all_segment_ids = torch.tensor([f.segment_ids for f in train_features], dtype=torch.long)
         all_answer_pos= torch.tensor([f.answer_position_mask for f in  train_features],dtype=torch.long)
-        all_start_positions = torch.tensor([f.start_position for f in train_features], dtype=torch.long)
-        all_end_positions = torch.tensor([f.end_position for f in train_features], dtype=torch.long)
+        all_positions = torch.tensor([f.position for f in train_features], dtype=torch.long)
         train_data = TensorDataset(all_input_ids, all_input_mask, all_segment_ids,all_answer_pos,
-                                   all_start_positions, all_end_positions)
+                                   all_positions)
         if args.local_rank == -1:
             train_sampler = RandomSampler(train_data)
         else:
             train_sampler = DistributedSampler(train_data)
-        train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=args.train_batch_size)
+        train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=args.train_batch_size, drop_last=True)
 
         model.train()
         for _ in trange(int(args.num_train_epochs), desc="Epoch"):
-
-            epoch_itorator=tqdm(train_dataloader)
-            all_loss=0
-            loss_num=0
+            model.zero_grad()
+            epoch_itorator=tqdm(train_dataloader,disable=None)
             for step, batch in enumerate(epoch_itorator):
                 if n_gpu == 1:
                     batch = tuple(t.to(device) for t in batch) # multi-gpu does scattering it-self
-                input_ids, input_mask, segment_ids, answer_pos,start_positions, end_positions = batch
-                loss = model(input_ids, segment_ids, input_mask,answer_pos, start_positions, end_positions)
+                input_ids, input_mask, segment_ids, answer_pos,positions = batch
+                loss = model(input_ids, segment_ids, input_mask,answer_pos, positions)
                 if n_gpu > 1:
                     loss = loss.mean() # mean() to average on multi-gpu.
                 if args.gradient_accumulation_steps > 1:
                     loss = loss / args.gradient_accumulation_steps
-                all_loss+=loss
-                loss_num+=1
-                epoch_itorator.set_description("loss : {}".format(all_loss*1.0/loss_num))
                 if args.fp16:
                     optimizer.backward(loss)
                 else:
@@ -1133,6 +1115,9 @@ def main():
                     optimizer.step()
                     optimizer.zero_grad()
                     global_step += 1
+
+                if (step+1) % 50 == 0:
+                    logger.info("loss@{}:{}".format(step,loss.cpu().item()))
 
     # Save a trained model
     output_model_file = os.path.join(args.output_dir, "pytorch_model.bin")
@@ -1149,9 +1134,9 @@ def main():
         model = torch.nn.DataParallel(model)
 
     if args.do_predict and (args.local_rank == -1 or torch.distributed.get_rank() == 0):
-        raw_test_data=json.load(open(args.predict_file,mode='r'))
         eval_examples = read_squad_examples(
             raw_test_data, is_training=False)
+        # eval_examples=eval_examples[:100]
         eval_features = convert_examples_to_features(
             examples=eval_examples,
             tokenizer=tokenizer,
@@ -1178,7 +1163,7 @@ def main():
         model.eval()
         all_results = []
         logger.info("Start evaluating")
-        for input_ids, input_mask, segment_ids,answer_pos, example_indices in tqdm(eval_dataloader, desc="Evaluating"):
+        for input_ids, input_mask, segment_ids,answer_pos, example_indices in tqdm(eval_dataloader, desc="Evaluating",disable=None):
             if len(all_results) % 1000 == 0:
                 logger.info("Processing example: %d" % (len(all_results)))
             input_ids = input_ids.to(device)
@@ -1186,15 +1171,13 @@ def main():
             segment_ids = segment_ids.to(device)
             answer_pos=answer_pos.to(device)
             with torch.no_grad():
-                batch_start_logits, batch_end_logits = model(input_ids, segment_ids, input_mask,answer_pos)
+                batch_logits = model(input_ids, segment_ids, input_mask,answer_pos)
             for i, example_index in enumerate(example_indices):
-                start_logits = batch_start_logits[i].detach().cpu().tolist()
-                end_logits = batch_end_logits[i].detach().cpu().tolist()
+                logits = batch_logits[i].detach().cpu().tolist()
                 eval_feature = eval_features[example_index.item()]
                 unique_id = int(eval_feature.unique_id)
                 all_results.append(RawResult(unique_id=unique_id,
-                                             start_logits=start_logits,
-                                             end_logits=end_logits))
+                                             logits=logits))
         output_prediction_file = os.path.join(args.output_dir, "predictions.json")
         output_nbest_file = os.path.join(args.output_dir, "nbest_predictions.json")
         write_predictions(eval_examples, eval_features, all_results,

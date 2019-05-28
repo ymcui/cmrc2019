@@ -33,7 +33,7 @@ Results on other sets will be annouced later.
 
 | Data | QAC | PAC | 
 | :------ | :-----: | :-----: | 
-| Trial data | 64.627% | 10.791% |
+| Trial data | 71.941% | 28.776% |
 | Development data | - | - |
 | Qualifying data | - | - |
 | Test data | - | - |

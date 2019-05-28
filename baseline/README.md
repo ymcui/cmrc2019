@@ -3,6 +3,8 @@
 We provide a simple BERT-based baseline system (PyTorch version) for participants. </br>
 
 ### Updates
+May 28, 2019 Baseline system and trial results has been updated.
+
 May 27, 2019 We've discovered an issue in the baseline code and will be updated shortly. Thank **@fanyangfanyang** for reporting the issue.
 
 
@@ -95,8 +97,8 @@ And the results will be shown like
 
 ```
 FILE: predictions.json
-QAC: 64.6276595745
-PAC: 10.7913669065
+QAC: 71.9414893617
+PAC: 28.7769784173
 TOTAL: 1504
 SKIP: 0
 ```
@@ -110,7 +112,7 @@ Note: Due to the non-determinism on GPU, your results will be slightly different
 
 | Data | QAC | PAC | 
 | :------ | :-----: | :-----: | 
-| Trial data | 64.627% | 10.791% |
+| Trial data | 71.941% | 28.776% |
 | Development data | - | - |
 | Qualifying data | - | - |
 | Test data | - | - |
