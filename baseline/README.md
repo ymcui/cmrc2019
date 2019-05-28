@@ -3,7 +3,7 @@
 We provide a simple BERT-based baseline system (PyTorch version) for participants. </br>
 
 ### Updates
-May 28, 2019 Baseline system and trial results has been updated.
+May 28, 2019 Baseline system and trial results have been updated. All participants are encouraged to take a look.
 
 May 27, 2019 We've discovered an issue in the baseline code and will be updated shortly. Thank **@fanyangfanyang** for reporting the issue.
 
