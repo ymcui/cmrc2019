@@ -59,6 +59,13 @@ Sponsor: iFLYTEK Co., Ltd. and iFLYTEK Research (Hebei) </br>
 Ting Liu, Harbin Institute of Technology </br>
 Yiming Cui, iFLYTEK Research
 
+
+## Official HFL WeChat Account
+Follow Joint Laboratory of HIT and iFLYTEK Research (HFL) on WeChat.
+
+![qrcode.png](https://github.com/ymcui/cmrc2019/blob/master/qrcode.jpg)
+
+
 ## Contact us
 Any problems? Feel free to concat us. </br>
 Email: **[cmrc2019 [aT] 126 [DoT] com](mailto:cmrc2019@126.com)** </br>
