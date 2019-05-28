@@ -22,7 +22,7 @@ May 17, 2019	We are expected to release task introduction and call for participa
 
 - data: contains offical evaluation data
 
-- sample_submission: sample submission for codalab competition platform
+- sample_submission: sample submission for codalab competition platform (`trial_rand_submission.zip` is a randomly generated prediction file, `trial_submission.zip` is the BERT baseline prediction file)
 
 
 ## Baseline System
