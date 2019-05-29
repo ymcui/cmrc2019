@@ -677,26 +677,7 @@ def write_predictions(all_examples, all_features, all_results, n_best_size,
                 except Exception as e:
                     continue
 
-        for pos,id in enumerate(answer_position_to_id): # evaluate result
-            answer_raw_text="[unused{}]".format(str((pos)+1))
-            # tmp_raw_answer=""
-            # for word in answer_raw_text:
-            #     tmp_raw_answer+=word+" "
-            # answer_raw_text=tmp_raw_answer.strip()
-            all_num1+=1
-            if str(id) not in answer_id_to_predict_val:
-                continue
-
-            value_=answer_id_to_predict_val[str(id)]
-            if len(value_)>0 and len(value_[0])>0:
-                logger.info("answer {}, predict {}".format(answer_raw_text,value_[0][0]))
-
-            if len(value_)>0 and len(value_[0])>0 and answer_raw_text==value_[0][0]:
-                right_num+=1
-    logger.info("acc em {}, right {} all example {}".format(right_num*1.0/len(all_examples),right_num,len(all_examples)))
-    #logger.info("acc em1 {}, right {} all num {}".format(right_num*1.0/all_num,right_num,all_num))
-    #logger.info("acc em2 {}, right {} all num1 {}".format(right_num*1.0/all_num1,right_num,all_num1))
-    json.dump(out_put_predict,open(output_prediction_file,mode="w"),indent=3)
+    json.dump(out_put_predict,open(output_prediction_file,mode="w"), indent=3)
 
 
 
