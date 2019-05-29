@@ -31,6 +31,10 @@ We provide a BERT-based baseline system for participants (check *baseline* direc
 
 Results on other sets will be annouced later.
 
+> QAC: Question-Level Accuracy
+
+> PAC: Passage-Level Accuracy
+
 | Data | Passage # | Query # | QAC | PAC | Fake Candidate | Availability |
 | :------ | :-----: | :-----: | :-----: | :-----: | :-----: | :----- | 
 | Trial Data | 139 | 1,504 | 71.941% | 28.776% | No | Public |
