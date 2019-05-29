@@ -31,23 +31,13 @@ We provide a BERT-based baseline system for participants (check *baseline* direc
 
 Results on other sets will be annouced later.
 
-| Data | QAC | PAC | 
-| :------ | :-----: | :-----: | 
-| Trial data | 71.941% | 28.776% |
-| Development data | - | - |
-| Qualifying data | - | - |
-| Test data | - | - |
-
-
-## Data
-
-| Data | Passage # | Query # | Note |
-| :------ | :-----: | :-----: | :----- | 
-| Trial Data | 139 | 1,504 | Public |
-| Train Data | 9,638 | 100,009 | Public |
-| Development Data | - | - | Public |
-| Qualifying Data | - | - | Semi-Hidden set |
-| Test Data | - | - | Hidden set |
+| Data | Passage # | Query # | QAC | PAC | Note |
+| :------ | :-----: | :-----: | :-----: | :-----: | :----- | 
+| Trial Data | 139 | 1,504 | 71.941% | 28.776% | Public |
+| Train Data | 9,638 | 100,009 | N/A | N/A | Public |
+| Development Data | - | - |  - | - | Public |
+| Qualifying Data | - | - |  - | - | Semi-Hidden set |
+| Test Data | - | - |  - | - | Hidden set |
 
 
 ## Organization Committee
