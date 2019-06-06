@@ -54,7 +54,6 @@ Pre-trained Chinese BERT weights (PyTorch version) should be placed in `bert_wei
 
 ```
 python run_cmrc2019_baseline.py \
-	--bert_model bert-base-chinese \
 	--vocab_file ./bert_weights_chinese/vocab.txt \
 	--bert_config_file ./bert_weights_chinese/bert_config.json \
 	--init_checkpoint ./bert_weights_chinese/pytorch_model.bin \
