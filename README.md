@@ -9,8 +9,8 @@ More details:
 - CMRC 2019 Official Website (English)：[https://cmrc2019.hfl-rc.com/english/](https://hfl-rc.github.io/cmrc2019/english/)
 
 ## Updates
-
-May 24, 2019  **Baseline system** have been released, check *baseline* directory.</br>
+June 10, 2019	**Development data** has been released, check *data* directory.</br>
+May 24, 2019  **Baseline system** has been released, check *baseline* directory.</br>
 May 23, 2019  **Train/Trial data** have been released, check *data* directory.</br>
 May 17, 2019	We are expected to release task introduction and call for participation on late May or early June. Stay tuned!
 
@@ -35,11 +35,11 @@ Results on other sets will be annouced later.
 
 > PAC: Passage-Level Accuracy
 
-| Data | Passage # | Query # | QAC | PAC | Fake Candidate | Availability |
+| Data | Passage # | Query # | QAC | PAC | Fake Candidates | Availability |
 | :------ | :-----: | :-----: | :-----: | :-----: | :-----: | :----- | 
 | Trial Data | 139 | 1,504 | 71.941% | 28.776% | No | Public |
 | Train Data | 9,638 | 100,009 | N/A | N/A | No | Public |
-| Development Data | - | - |  - | - | Yes | Public |
+| Development Data | 300 | 3,053 | 70.586% | 13.333% | **Yes** | Public |
 | Qualifying Data | - | - |  - | - | Yes | Semi-Hidden |
 | Test Data | - | - |  - | - | Yes | Hidden |
 
