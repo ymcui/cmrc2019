@@ -75,7 +75,6 @@ We use one NVIDIA V100 (32GB) for training and roughly take 4~5 hours.
 If you have successfully trained your model, you could use the following command for testing your model on the testing sets.
 ```
 python run_cmrc2019_baseline.py \
-	--bert_model bert-base-chinese \
 	--vocab_file ./bert_weights_chinese/vocab.txt \
 	--bert_config_file ./bert_weights_chinese/bert_config.json \
 	--do_predict \
