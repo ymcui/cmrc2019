@@ -23,8 +23,10 @@ def compare_list(ground_truth, prediction):
 		if str(ground_truth[k]) == str(prediction[k]):
 			right_count += 1
 
-	right_count = right_count - gap_count
-	return right_count
+	final_right_count = right_count - gap_count
+	if final_right_count < 0:
+		final_right_count = 0 
+	return final_right_count
 
 #
 def evaluate(ground_truth_file, prediction_file):
@@ -44,7 +46,8 @@ def evaluate(ground_truth_file, prediction_file):
 
 		predictions = []
 		if context_id not in prediction_file:
-			right_count = 0
+			sys.stderr.write("Not found context_id in prediction: {}\n".format(context_id))
+			right_question_count = 0
 		else:
 			predictions	= prediction_file[context_id]
 			right_question_count = compare_list(answers, predictions)
@@ -58,6 +61,9 @@ def evaluate(ground_truth_file, prediction_file):
 
 	qac_score = 100.0 * qac / total_question_count
 	pac_score = 100.0 * pac / total_passage_count
+
+	if skip_question_count:
+		sys.stderr.write("***Number of predicted samples is not equal to ground truth!***")
 
 	return qac_score, pac_score, total_question_count, skip_question_count
 
