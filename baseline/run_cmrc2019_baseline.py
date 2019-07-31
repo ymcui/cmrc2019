@@ -28,6 +28,7 @@ import os
 import random
 import pickle
 from tqdm import tqdm, trange
+import re
 
 import numpy as np
 import torch
@@ -205,8 +206,10 @@ def read_squad_examples(input_data, is_training):
                     position=start_position)
                 examples.append(example)
         else:
-
-            answer_index=paragraph['answers']
+            answer_index=[-1 for i in re.findall(r'\[unused\d*\]',paragraph_text)] # store the number of blank positions
+            if len(paragraph['answers'])>0:
+                assert len(answer_index) == len(paragraph['answers'])
+            #answer_index=paragraph['answers']
             for choice_index,choice in enumerate(paragraph["choices"]):
                 question_text = choice
                 orig_answer_text = None

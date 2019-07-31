@@ -3,6 +3,8 @@
 We provide a simple BERT-based baseline system (PyTorch version) for participants. </br>
 
 ### Updates
+August 1, 2019 Fix a problem when the answer list is empty (for qualifying and test set).
+
 May 28, 2019 Baseline system and trial results have been updated. All participants are encouraged to take a look.
 
 May 27, 2019 We've discovered an issue in the baseline code and will be updated shortly. Thank **@fanyangfanyang** for reporting the issue.
@@ -111,8 +113,8 @@ Note: Due to the non-determinism on GPU, your results will be slightly different
 | Data | QAC | PAC | 
 | :------ | :-----: | :-----: | 
 | Trial data | 71.941% | 28.776% |
-| Development data | - | - |
-| Qualifying data | - | - |
+| Development data | 70.586% | 13.333% |
+| Qualifying data | 70.01% | 8.20% |
 | Test data | - | - |
 
 

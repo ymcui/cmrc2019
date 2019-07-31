@@ -9,10 +9,11 @@ More details:
 - CMRC 2019 Official Website (English)：[https://cmrc2019.hfl-rc.com/english/](https://hfl-rc.github.io/cmrc2019/english/)
 
 ## Updates
-June 10, 2019	**Development data** has been released, check *data* directory.</br>
-May 24, 2019  **Baseline system** has been released, check *baseline* directory.</br>
-May 23, 2019  **Train/Trial data** have been released, check *data* directory.</br>
-May 17, 2019	We are expected to release task introduction and call for participation on late May or early June. Stay tuned!
+August 1, 2019	**Qualifying data** has been released, check *data* directory. (**Note that, json key 'answers' no longer contains answers.**)  
+June 10, 2019	**Development data** has been released, check *data* directory.  
+May 24, 2019  **Baseline system** has been released, check *baseline* directory.  
+May 23, 2019  **Train/Trial data** have been released, check *data* directory.  
+May 17, 2019	We are expected to release task introduction and call for participation on late May or early June. Stay tuned!  
 
 ## Directory Guide
 
@@ -40,28 +41,32 @@ Results on other sets will be annouced later.
 | Trial Data | 139 | 1,504 | 71.941% | 28.776% | No | Public |
 | Train Data | 9,638 | 100,009 | N/A | N/A | No | Public |
 | Development Data | 300 | 3,053 | 70.586% | 13.333% | **Yes** | Public |
-| Qualifying Data | - | - |  - | - | Yes | Semi-Hidden |
-| Test Data | - | - |  - | - | Yes | Hidden |
+| Qualifying Data | 500 | 5,081 | 70.01% | 8.20% | **Yes** | Semi-Hidden |
+| Test Data | - | - |  - | - | **Yes** | Hidden |
 
 
 ## Organization Committee
-Host: Chinese Information Processing Society of China (CIPS) </br>
-Organizer: Joint Laboratory of HIT and iFLYTEK (HFL) </br>
-Sponsor: iFLYTEK Co., Ltd. and iFLYTEK Research (Hebei) </br>
+Host: Chinese Information Processing Society of China (CIPS)  
+Organizer: Joint Laboratory of HIT and iFLYTEK (HFL)  
+Sponsor: iFLYTEK Co., Ltd. and iFLYTEK Research (Hebei)  
 
 ## Evaluation Co-Chairs
-Ting Liu, Harbin Institute of Technology </br>
+Ting Liu, Harbin Institute of Technology  
 Yiming Cui, iFLYTEK Research
+
+## Official Discussion QQ Group
+You can join our QQ group for discussion purpose.
+
+![qqgroup.png](https://github.com/ymcui/cmrc2019/raw/master/qqgroup.png) 
 
 
 ## Official HFL WeChat Account
 Follow Joint Laboratory of HIT and iFLYTEK Research (HFL) on WeChat.
 
-![qrcode.png](https://github.com/ymcui/cmrc2019/blob/master/qrcode.jpg)
+![qrcode.png](https://github.com/ymcui/cmrc2019/raw/master/qrcode.jpg)
 
 
 ## Contact us
-Any problems? Feel free to concat us. </br>
-Email: **[cmrc2019 [aT] 126 [DoT] com](mailto:cmrc2019@126.com)** </br>
+Any problems? Feel free to concat us.  
+Email: **[cmrc2019 [aT] 126 [DoT] com](mailto:cmrc2019@126.com)**  
 Forum: [CodaLab Competition Forum](https://competitions.codalab.org/forums/19781/)
-
