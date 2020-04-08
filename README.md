@@ -50,7 +50,7 @@ Results on other sets will be annouced later.
 If you wish to use our data in your research, please cite our [paper](https://arxiv.org/abs/2004.03116):
 ```
 @article{cui-2020-cmrc2019,
-  title={Improving Machine Reading Comprehension via Adversarial Training},
+  title={A Sentence Cloze Dataset for Chinese Machine Reading Comprehension},
   author={Cui, Yiming and Liu, Ting and Yang, Ziqing and Chen, Zhipeng and Ma, Wentao and Che, Wanxiang and Wang, Shijin and Hu, Guoping},
   journal={arXiv preprint arXiv:2004.03116},
   year={2020}
