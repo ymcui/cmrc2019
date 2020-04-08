@@ -9,7 +9,7 @@ More details:
 - CMRC 2019 Official Website (English)：[https://cmrc2019.hfl-rc.com/english/](https://hfl-rc.github.io/cmrc2019/english/)
 
 ## Updates
-April 8, 2020 Add dataset description paper
+April 8, 2020 Add [dataset description paper](https://arxiv.org/abs/2004.03116)
 August 1, 2019	**Qualifying data** has been released, check *data* directory. (**Note that, json key 'answers' no longer contains answers.**)  
 June 10, 2019	**Development data** has been released, check *data* directory.  
 May 24, 2019  **Baseline system** has been released, check *baseline* directory.  
@@ -47,7 +47,7 @@ Results on other sets will be annouced later.
 
 ## Reference
 
-If you wish to use our data in your research, please cite:
+If you wish to use our data in your research, please cite our [paper](https://arxiv.org/abs/2004.03116):
 ```
 @article{cui-2020-cmrc2019,
   title={Improving Machine Reading Comprehension via Adversarial Training},
