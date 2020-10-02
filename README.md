@@ -78,7 +78,7 @@ Follow Joint Laboratory of HIT and iFLYTEK Research (HFL) on WeChat.
 ## Contact us
 Any problems? Feel free to concat us.  
 Email: **[cmrc2019 [aT] 126 [DoT] com](mailto:cmrc2019@126.com)**  
-Forum: [CodaLab Competition Forum](https://competitions.codalab.org/forums/19781/)
+Forum: [CodaLab Competition Forum](https://competitions.codalab.org/forums/19781/)  
 CMRC 2019 Official Website (中文)：[https://cmrc2019.hfl-rc.com/](https://hfl-rc.github.io/cmrc2019/)  
 CMRC 2019 Official Website (English)：[https://cmrc2019.hfl-rc.com/english/](https://hfl-rc.github.io/cmrc2019/english/)
 
