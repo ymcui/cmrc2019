@@ -46,6 +46,13 @@ Results on other sets will be annouced later.
 | Qualifying Data | 500 | 5,081 | 70.01% | 8.20% | **Yes** | Semi-Hidden |
 | Test Data | - | - |  - | - | **Yes** | Hidden |
 
+## International Standard Language Resource Number (ISLRN)
+
+ISLRN: 813-010-842-493-2
+
+http://www.islrn.org/resources/resources_info/8624/
+
+
 ## Reference
 
 If you wish to use our data in your research, please cite our [paper](https://arxiv.org/abs/2004.03116):
