@@ -1,4 +1,13 @@
-## A Sentence Cloze Dataset for Chinese Machine Reading Comprehension (CMRC 2019)
+<p align="center">
+    <br>
+    <img src="./banner.png" width="500"/>
+    <br>
+</p>
+<p align="center">
+    <a href="https://github.com/ymcui/cmrc2019/blob/master/LICENSE">
+        <img alt="GitHub" src="https://img.shields.io/github/license/ymcui/cmrc2019.svg?color=blue&style=flat-square">
+    </a>
+</p>
 
 This repository contains the data for [The Third Evaluation Workshop on Chinese Machine Reading Comprehension (CMRC 2019)](https://hfl-rc.github.io/cmrc2019/). We will present our paper at [COLING 2020](https://coling2020.org),
 
