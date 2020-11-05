@@ -16,17 +16,18 @@ Authors: Yiming Cui, Ting Liu, Ziqing Yang, Zhipeng Chen, Wentao Ma, Wanxiang Ch
 Link: https://arxiv.org/abs/2004.03116  
 Venue: COLING 2020  
 
+### Open Challenge Leaderboard (New!)
 
-## Updates
-Oct 1, 2020 Our paper is accepted to [COLING 2020](https://coling2020.org).  
-April 8, 2020 Add [dataset description paper](https://arxiv.org/abs/2004.03116)   
-August 1, 2019	**Qualifying data** has been released, check *data* directory. (**Note that, json key 'answers' no longer contains answers.**)  
-June 10, 2019	**Development data** has been released, check *data* directory.  
-May 24, 2019  **Baseline system** has been released, check *baseline* directory.  
-May 23, 2019  **Train/Trial data** have been released, check *data* directory.  
-May 17, 2019	We are expected to release task introduction and call for participation on late May or early June. Stay tuned!  
+Keep track of the latest state-of-the-art systems on CMRC 2019 dataset.
+https://ymcui.github.io/cmrc2019/
 
-## Directory Guide
+### Submission Guidelines
+
+If you would like to test your model on the hidden test and challenge set, please follow the instructions on how to submit your model via CodaLab worksheet.
+https://worksheets.codalab.org/worksheets/0xe856b40d21de45bf898cd1d3c5135afe
+
+
+### Directory Guide
 
 - baseline: a Chinese BERT-based simple baseline system
 
@@ -37,7 +38,7 @@ May 17, 2019	We are expected to release task introduction and call for participa
 - sample_submission: sample submission for codalab competition platform (`trial_rand_submission.zip` is a randomly generated prediction file, `trial_submission.zip` is the BERT baseline prediction file)
 
 
-## Baseline System
+### Baseline System
 
 We provide a BERT-based baseline system for participants (check *baseline* directory for more info).
 
@@ -62,11 +63,11 @@ ISLRN: 813-010-842-493-2
 http://www.islrn.org/resources/resources_info/8624/
 
 
-## Reference
+### Reference
 
 If you wish to use our data in your research, please cite our [paper](https://arxiv.org/abs/2004.03116):
 ```
-@inproceeding={cui-2020-cmrc2019,
+@inproceeding={cui-etal-2020-cmrc2019,
   title={A Sentence Cloze Dataset for Chinese Machine Reading Comprehension},
   author={Cui, Yiming and Liu, Ting and Yang, Ziqing and Chen, Zhipeng and Ma, Wentao and Che, Wanxiang and Wang, Shijin and Hu, Guoping},
   booktitle = 	"Proceedings of the 28th International Conference on Computational Linguistics (COLING 2020)",
@@ -75,23 +76,23 @@ If you wish to use our data in your research, please cite our [paper](https://ar
 ```
 
 
-## Organization Committee
+### Organization Committee
 Host: Chinese Information Processing Society of China (CIPS)  
 Organizer: Joint Laboratory of HIT and iFLYTEK Research (HFL)  
 Sponsor: iFLYTEK Co., Ltd. and iFLYTEK Research (Hebei)  
 
-## Evaluation Co-Chairs
+### Evaluation Co-Chairs
 Ting Liu, Harbin Institute of Technology  
 Yiming Cui, Joint Laboratory of HIT and iFLYTEK Research
 
 
-## Official HFL WeChat Account
+### Official HFL WeChat Account
 Follow Joint Laboratory of HIT and iFLYTEK Research (HFL) on WeChat.
 
 ![qrcode.png](https://github.com/ymcui/cmrc2019/raw/master/qrcode.jpg)
 
 
-## Contact us
+### Contact us
 Any problems? Feel free to concat us.  
 Email: **[cmrc2019 [aT] 126 [DoT] com](mailto:cmrc2019@126.com)**  
 Forum: [CodaLab Competition Forum](https://competitions.codalab.org/forums/19781/)  
