@@ -1,0 +1,89 @@
+{
+	"version": "cmrc2019",
+	"data": [
+		{
+		  "tid": "2020001", 
+		  "date": "2019/10/19", 
+		  "system_name": "bert_scp_spm", 
+		  "team_name": "PINGAN-GammaLab", 
+		  "model_type": "ensemble", 
+		  "url": "", 
+		  "dev_qac": "90.926", 
+		  "dev_pac": "60.0", 
+		  "test_qac": "90.054", 
+		  "test_pac": "57.6"
+		},
+		{
+		  "tid": "2020002", 
+		  "date": "2019/10/19", 
+		  "system_name": "mojito system", 
+		  "team_name": "SFTech", 
+		  "model_type": "ensemble", 
+		  "url": "", 
+		  "dev_qac": "88.208", 
+		  "dev_pac": "48.0", 
+		  "test_qac": "85.990", 
+		  "test_pac": "41.8"
+		},
+		{
+		  "tid": "2020003", 
+		  "date": "2019/10/19", 
+		  "system_name": "DA-BERT", 
+		  "team_name": "Anonymous", 
+		  "model_type": "ensemble", 
+		  "url": "", 
+		  "dev_qac": "86.341", 
+		  "dev_pac": "34.3", 
+		  "test_qac": "84.447", 
+		  "test_pac": "27.6"
+		},
+		{
+		  "tid": "2020004", 
+		  "date": "2019/10/19", 
+		  "system_name": "CMRC 2019 MULTIPLE BERT", 
+		  "team_name": "Six Estates", 
+		  "model_type": "ensemble", 
+		  "url": "https://www.6estates.com", 
+		  "dev_qac": "82.968", 
+		  "dev_pac": "38.7", 
+		  "test_qac": "82.590", 
+		  "test_pac": "32.2"
+		},
+		{
+		  "tid": "2020005", 
+		  "date": "2019/10/19", 
+		  "system_name": "nkyzhangyi_cmrc_v2", 
+		  "team_name": "CICC", 
+		  "model_type": "ensemble", 
+		  "url": "", 
+		  "dev_qac": "80.937", 
+		  "dev_pac": "29.7", 
+		  "test_qac": "79.562", 
+		  "test_pac": "26.6"
+		},
+		{
+		  "tid": "2020006", 
+		  "date": "2019/10/19", 
+		  "system_name": "MRC-ZZ SYSTEM", 
+		  "team_name": "Harbin Institute of Technology & Hanyi Fonts", 
+		  "model_type": "single model", 
+		  "url": "", 
+		  "dev_qac": "80.380", 
+		  "dev_pac": "29.0", 
+		  "test_qac": "78.780", 
+		  "test_pac": "26.6"
+		},
+		{
+		  "tid": "2020007", 
+		  "date": "2019/10/19", 
+		  "system_name": "MB-Reader", 
+		  "team_name": "ECUST", 
+		  "model_type": "ensemble", 
+		  "url": "", 
+		  "dev_qac": "78.218", 
+		  "dev_pac": "18.7", 
+		  "test_qac": "76.319", 
+		  "test_pac": "15.6"
+		}
+	]
+}
